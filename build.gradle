@@ -29,6 +29,7 @@ dependencies {
 	compile "org.springframework.cloud:spring-cloud-spring-service-connector:1.2.2.RELEASE"
 	compile "org.springframework.cloud:spring-cloud-cloudfoundry-connector:1.2.2.RELEASE"
 	compile "org.springframework.data:spring-data-geode:1.0.0.INCUBATING-RELEASE"
-	
+	compile("io.dropwizard.metrics:metrics-core:3.1.0")
+	compile("org.coursera:dropwizard-metrics-datadog:1.1.6")
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
