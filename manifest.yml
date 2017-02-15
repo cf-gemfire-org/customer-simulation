@@ -1,0 +1,8 @@
+---
+applications:
+- name: customer-simulation
+  path: build/libs/customer-simulation-0.0.1-SNAPSHOT.jar
+  buildpack: java_buildpack
+  memory: 1024M
+  services:
+  - gf

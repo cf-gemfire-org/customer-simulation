@@ -1,30 +1,28 @@
-package io.pivotal;
+package io.pivotal.customer.simulation;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.gemfire.mapping.Region;
 
 import java.io.Serializable;
 
-@Region("Simulation")
+@Region("simulation")
 public class Simulation implements Serializable {
 
     private static final long serialVersionUID = 42L;
 
     @Id
-    String guid;
+    String key;
     String value;
 
-    public Simulation() {
+    public Simulation() {}
 
-    }
-
-    public Simulation(String guid, String value) {
-        this.guid = guid;
+    public Simulation(String key, String value) {
+        this.key = key;
         this.value = value;
     }
 
-    public String getGuid() {
-        return guid;
+    public String getKey() {
+        return key;
     }
 
     public String getValue() {
@@ -38,11 +36,15 @@ public class Simulation implements Serializable {
 
         Simulation data = (Simulation) o;
 
-        return guid.equals(data.getGuid());
+        return key.equals(data.getKey()) && value.equals(data.getValue());
     }
 
     @Override
     public int hashCode() {
-        return guid.hashCode();
+        return key.hashCode();
+    }
+
+    public String toString() {
+        return "{K:" + key + ", V:" + value + "}";
     }
 }

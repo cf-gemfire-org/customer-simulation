@@ -1,4 +1,5 @@
-package io.pivotal;
+package io.pivotal.customer.simulation;
+
 import org.springframework.cloud.cloudfoundry.CloudFoundryServiceInfoCreator;
 import org.springframework.cloud.cloudfoundry.Tags;
 
@@ -7,7 +8,7 @@ import java.util.Map;
 
 public class ServiceInfoCreator extends CloudFoundryServiceInfoCreator<ServiceInfo> {
     public ServiceInfoCreator() {
-        super(new Tags("gemfire"));
+        super(new Tags("gemfire", "gf"));
     }
 
     @Override

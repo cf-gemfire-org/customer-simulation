@@ -1,4 +1,4 @@
-package io.pivotal;
+package io.pivotal.customer.simulation;
 
 import java.util.Map;
 
