@@ -1,14 +1,12 @@
 package io.pivotal.customer.simulation;
 
-import com.codahale.metrics.Gauge;
-import com.codahale.metrics.Meter;
-import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.Timer;
+import com.codahale.metrics.*;
 import org.apache.log4j.Logger;
 import org.coursera.metrics.datadog.DatadogReporter;
 import org.coursera.metrics.datadog.transport.HttpTransport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 import javax.annotation.PostConstruct;
 import java.util.concurrent.TimeUnit;
@@ -19,15 +17,26 @@ public class SimulationRunner {
   private static final Meter requests = metrics.meter("requests");
   private static final Timer writeTime = metrics.timer("gemfire.write");
   private static final Timer readTime = metrics.timer("gemfire.read");
+  private final Counter cacheMisses = metrics.counter("gemfire.cache.miss");
+  private final Counter corruptRead = metrics.counter("gemfire.corrupt.read");
 
   @Autowired
   private SimulationRepository repository;
 
+  @Autowired
+  private Environment environment;
+
   private static Logger log = Logger.getLogger(SimulationRunner.class.getName());
 
   @PostConstruct
-  public void run() {
-    HttpTransport transport = new HttpTransport.Builder().withApiKey("6e02dcebb0c3efa7e14a0be383a0d378").build();
+  public void run() throws Exception {
+    String datadogApiKey = environment.getProperty("DATADOG_API_KEY");
+
+    if (datadogApiKey == null || datadogApiKey.equals("")) {
+      throw new Exception("No DataDog Api key set in the environment");
+    }
+
+    HttpTransport transport = new HttpTransport.Builder().withApiKey(datadogApiKey).build();
     DatadogReporter dataDog = DatadogReporter.forRegistry(metrics)
         .convertRatesTo(TimeUnit.SECONDS)
         .convertDurationsTo(TimeUnit.MILLISECONDS)
@@ -40,7 +49,6 @@ public class SimulationRunner {
     registerDiskStats(systemInfo);
     registerMemoryStats(systemInfo);
     registerCPUStats(systemInfo);
-
 
     int count = 0;
 
@@ -68,7 +76,6 @@ public class SimulationRunner {
       writeTimer.stop();
       log.info("Put => " + sim);
     }
-    requests.mark();
 
     String rand = String.valueOf((int) (Math.random() * (count + 1)));
     String expectedKey = "K" + rand;
@@ -82,12 +89,11 @@ public class SimulationRunner {
       readTimer.stop();
       if (actualSim != null) {
         if (actualSim.getKey().equals(expectedKey) && actualSim.getValue().equals(expectedValue)) {
-          log.info("Performed a get on " + expectedKey + " successfully");
         } else {
-          log.error("Performed a get on " + expectedKey + " but got a value of " + actualSim.getValue());
+          corruptRead.inc();
         }
       } else {
-        log.error("Value was null for " + expectedKey);
+        cacheMisses.inc();
       }
     }
   }
