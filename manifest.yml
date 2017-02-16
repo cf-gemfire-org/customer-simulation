@@ -6,3 +6,5 @@ applications:
   memory: 1024M
   services:
   - customer-simulation
+  health-check-type: process
+  no-route: true
