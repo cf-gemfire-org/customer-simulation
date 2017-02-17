@@ -50,36 +50,30 @@ public class SimulationRunner {
     registerMemoryStats(systemInfo);
     registerCPUStats(systemInfo);
 
-    int count = 0;
+    long count = 0;
 
     while (true) {
       emitGemfireStats(count);
 
       requests.mark();
       count++;
-
-      try {
-        Thread.sleep(1000);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
     }
   }
 
-  public void emitGemfireStats(int count) {
-    Simulation sim = new Simulation("K" + count, "V" + count);
+  public void emitGemfireStats(long count) {
+    Simulation sim = new Simulation("K" + count, new StringBuilder().append("V").append(count).append(BigString.hundredKbString).toString());
     final Timer.Context writeTimer = writeTime.time();
 
     try {
       repository.save(sim);
     } finally {
       writeTimer.stop();
-      log.info("Put => " + sim);
+      log.info("Put => " + sim.getKey());
     }
 
-    String rand = String.valueOf((int) (Math.random() * (count + 1)));
+    String rand = String.valueOf((long) (Math.random() * (count + 1)));
     String expectedKey = "K" + rand;
-    String expectedValue = "V" + rand;
+    String expectedValue = new StringBuilder().append("V").append(rand).append(BigString.hundredKbString).toString();
 
     Simulation actualSim = null;
     final Timer.Context readTimer = readTime.time();

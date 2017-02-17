@@ -10,9 +10,7 @@ import org.springframework.data.gemfire.repository.config.EnableGemfireRepositor
 @EnableGemfireRepositories
 public class CustomerSimulationApplication {
 
-
 	public static void main(String[] args) {
 		SpringApplication.run(CustomerSimulationApplication.class);
 	}
-
 }

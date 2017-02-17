@@ -6,5 +6,6 @@ applications:
   memory: 1024M
   services:
   - customer-simulation
+  - customer-simulation-papertrail
   health-check-type: process
   no-route: true
