@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class ServiceInfoCreator extends CloudFoundryServiceInfoCreator<ServiceInfo> {
     public ServiceInfoCreator() {
-        super(new Tags("gemfire", "gf"));
+        super(new Tags("p-cloudcache", "cloudcache"));
     }
 
     @Override

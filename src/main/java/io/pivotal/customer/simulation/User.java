@@ -12,7 +12,7 @@ public class User {
     }
 
     public boolean isOperator() {
-        return username != null && username.equals("operator");
+        return username != null && username.equals("cluster_perator");
     }
 
     public String getPassword() {
