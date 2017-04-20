@@ -33,17 +33,16 @@ public class ApplicationConfig extends AbstractCloudConfig {
     @Bean
     public ClientCache gemfireCache() {
         Cloud cloud = new CloudFactory().getCloud();
-
-        ServiceInfo serviceInfo = (ServiceInfo) cloud.getServiceInfos().get(0);
+        CloudCacheServiceInfo cloudCacheServiceInfo = (CloudCacheServiceInfo)cloud.getServiceInfos().stream().filter(si -> si instanceof CloudCacheServiceInfo).findFirst().get();
 
         ClientCacheFactory factory = new ClientCacheFactory();
-        for (URI locator : serviceInfo.getLocators()) {
+        for (URI locator : cloudCacheServiceInfo.getLocators()) {
             factory.addPoolLocator(locator.getHost(), locator.getPort());
         }
 
         factory.set(SECURITY_CLIENT, "io.pivotal.customer.simulation.UserAuthInitialize.create");
-        factory.set(SECURITY_USERNAME, serviceInfo.getUsername());
-        factory.set(SECURITY_PASSWORD, serviceInfo.getPassword());
+        factory.set(SECURITY_USERNAME, cloudCacheServiceInfo.getUsername());
+        factory.set(SECURITY_PASSWORD, cloudCacheServiceInfo.getPassword());
 
         return factory.create();
     }

@@ -10,14 +10,14 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ServiceInfo extends BaseServiceInfo {
+public class CloudCacheServiceInfo extends BaseServiceInfo {
 
     private final Pattern p = Pattern.compile("(.*)\\[(\\d*)\\]");
 
     private URI[] locators;
     private User user;
 
-    public ServiceInfo(String id, List<String> locators, List<Map<String, String>> users) {
+    public CloudCacheServiceInfo(String id, List<String> locators, List<Map<String, String>> users) {
         super(id);
 
         parseLocators(locators);

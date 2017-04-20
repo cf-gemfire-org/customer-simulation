@@ -6,14 +6,14 @@ import org.springframework.cloud.cloudfoundry.Tags;
 import java.util.List;
 import java.util.Map;
 
-public class ServiceInfoCreator extends CloudFoundryServiceInfoCreator<ServiceInfo> {
+public class ServiceInfoCreator extends CloudFoundryServiceInfoCreator<CloudCacheServiceInfo> {
     public ServiceInfoCreator() {
         super(new Tags("p-cloudcache", "cloudcache"));
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public ServiceInfo createServiceInfo(Map<String, Object> serviceData) {
+    public CloudCacheServiceInfo createServiceInfo(Map<String, Object> serviceData) {
         String id = (String) serviceData.get("name");
 
         Map<String, Object> credentials = getCredentials(serviceData);
@@ -21,7 +21,7 @@ public class ServiceInfoCreator extends CloudFoundryServiceInfoCreator<ServiceIn
         List<String> locators = (List<String>) credentials.get("locators");
         List<Map<String, String>> users = (List<Map<String, String>>) credentials.get("users");
 
-        return new ServiceInfo(id, locators, users);
+        return new CloudCacheServiceInfo(id, locators, users);
     }
 
     @Override
