@@ -2,10 +2,10 @@
 applications:
 - name: customer-simulation
   path: build/libs/customer-simulation-0.0.1-SNAPSHOT.jar
-  buildpack: java_buildpack
+  buildpack: java_buildpack_offline
   memory: 1024M
   services:
   - customer-simulation
-  - customer-simulation-papertrail
+  - customer-simulation-logsearch
   health-check-type: process
   no-route: true
