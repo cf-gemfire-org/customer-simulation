@@ -1,7 +1,6 @@
 package io.pivotal.customer.simulation;
 
 import com.codahale.metrics.*;
-import org.apache.log4j.Logger;
 import org.coursera.metrics.datadog.DatadogReporter;
 import org.coursera.metrics.datadog.transport.HttpTransport;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,6 @@ public class SimulationRunner {
 
   @Autowired
   private Environment environment;
-
-  private static Logger log = Logger.getLogger(SimulationRunner.class.getName());
 
   @PostConstruct
   public void run() throws Exception {
@@ -68,7 +65,6 @@ public class SimulationRunner {
       repository.save(sim);
     } finally {
       writeTimer.stop();
-      log.info("Put => " + sim.getKey());
     }
 
     String rand = String.valueOf((long) (Math.random() * (count + 1)));
